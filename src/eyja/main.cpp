@@ -1,6 +1,9 @@
+#include "precompiled.h"
+
 #include <iostream>
-#include <http.h>
 #include "XGetopt.h"
+
+#include "http_server.h"
 
 // Arguments: "eyja -p:[port] -p
 int main(int args, char** argv) {
@@ -22,5 +25,5 @@ int main(int args, char** argv) {
 
 	std::cout << "[http] binding to " << (addr == nullptr ? "0.0.0.0" : addr) << ":" << port << std::endl;
 
-	
+	eyja::http_server server;
 }

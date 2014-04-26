@@ -92,6 +92,8 @@
         }, # msvs_configuration_attributes
       }
     },
+    'msvs_precompiled_header': 'precompiled.h',
+    'msvs_precompiled_source': 'precompiled.cpp',
     'msvs_settings': {
       'VCCLCompilerTool': {
         'StringPooling': 'true', # pool string literals

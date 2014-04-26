@@ -10,12 +10,12 @@
 			'conditions': [],
 			'include_dirs': [
 			],
-			'msvs_precompiled_header': './stdafx.h',
-    		'msvs_precompiled_source': './stdafx.cpp',
 			'sources': [
+				'./http_server.cpp',
+				'./http_server.h',
 				'./main.cpp',
-				'./stdafx.h',
-				'./stdafx.cpp',
+				'./precompiled.h',
+				'./precompiled.cpp',
 				'./XGetopt.h',
 				'./XGetopt.cpp'
 			]
