@@ -3,7 +3,9 @@
 pushd "$RepoRoot\ext"
 try {
     $repos = @(
-        "https://github.com/kellabyte/Haywire")
+        "https://github.com/kellabyte/Haywire",
+        "https://github.com/joyent/libuv",
+        "https://chromium.googlesource.com/external/gyp")
 
     $repos | ForEach-Object {
         $folder = [IO.Path]::GetFileNameWithoutExtension($_)
