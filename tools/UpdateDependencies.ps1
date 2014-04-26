@@ -17,12 +17,8 @@ try {
             Write-Banner "Updating $_"
             pushd $folder
             try {
-                if(git status | where { $_ -like "*working directory clean"}) {
-                    exec git checkout master
-                    exec git pull origin master
-                } else {
-                    throw "There are changes in the $_ repository! You must commit them or revert them"
-                }
+                exec git checkout -f master
+                exec git pull origin master
             }
             finally {
                 popd

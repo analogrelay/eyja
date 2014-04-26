@@ -12,6 +12,9 @@
 			'include_dirs': [
 				'./ext/Haywire/include',
 				'./ext'
+			],
+			'sources': [
+				
 			]
 		}
 	]
