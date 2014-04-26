@@ -133,6 +133,7 @@
           # ... or that C implementations shouldn't use
           # POSIX names
           '_CRT_NONSTDC_NO_DEPRECATE',
+          '_UNICODE'
         ],
         'target_conditions': [
           ['target_arch=="x64"', {

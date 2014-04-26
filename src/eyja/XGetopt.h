@@ -12,12 +12,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef XGETOPT_H
-#define XGETOPT_H
+#pragma once
 
 extern int optind, opterr;
-extern char *optarg;
+extern wchar_t *optarg;
 
-int getopt(int argc, char *argv [], char *optstring);
-
-#endif //XGETOPT_H
+int getopt(int argc, wchar_t *argv [], wchar_t *optstring);

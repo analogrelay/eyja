@@ -11,11 +11,13 @@
 			'include_dirs': [
 			],
 			'sources': [
-				'./http_server.cpp',
-				'./http_server.h',
-				'./main.cpp',
+                './main.cpp',
 				'./precompiled.h',
 				'./precompiled.cpp',
+				'./store.h',
+                './store.cpp',
+                './value.h',
+                './value.cpp',
 				'./XGetopt.h',
 				'./XGetopt.cpp'
 			]
