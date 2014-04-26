@@ -1,3 +1,5 @@
+$Global:RepoRoot = Convert-Path "$PSScriptRoot\.."
+
 function Write-Banner($banner) {
     Write-Host -ForegroundColor Green "*** $banner ***"
 }
