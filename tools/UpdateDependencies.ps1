@@ -1,20 +1,27 @@
+param([switch]$Update)
+
 . "$PSScriptRoot\Common.ps1"
 
 pushd "$RepoRoot\ext"
 try {
     $repos = @(
-        "https://github.com/kellabyte/Haywire",
-        "https://github.com/joyent/libuv",
         "https://chromium.googlesource.com/external/gyp")
 
     $repos | ForEach-Object {
-        $folder = [IO.Path]::GetFileNameWithoutExtension($_)
-        if(!(Test-Path $folder)) {
-            Write-Banner "Cloning $_"
-            exec git clone $_
+        $repo = $_;
+        if($_ -is [array]) {
+            $repo = $_[0];
+            $folder = $_[1];
+        } else {
+            $folder = [IO.Path]::GetFileNameWithoutExtension($_);
         }
-        else {
-            Write-Banner "Updating $_"
+
+        if(!(Test-Path $folder)) {
+            Write-Banner "Cloning $repo"
+            exec git clone $repo $folder
+        }
+        elseif($Update) {
+            Write-Banner "Updating $repo"
             pushd $folder
             try {
                 exec git checkout -f master
