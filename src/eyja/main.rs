@@ -1,3 +1,9 @@
+extern crate term;
+
+mod repl;
+
 fn main() {
-	println!("Hello!");
+	//println!("Creating memory-backed eyja store...");
+	println!("Starting REPL loop ...");
+	::repl::run();
 }

@@ -1,9 +1,18 @@
 ROOTDIR	:= $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-BINDIR	:= $(ROOTDIR)/bin
-SRCDIR 	:= $(ROOTDIR)/src
+BINDIR	:= $(ROOTDIR)bin
+INTDIR	:= $(ROOTDIR)obj
+SRCDIR 	:= $(ROOTDIR)src
 
-$(BINDIR)/eyja: $(SRCDIR)/eyja/main.rs | $(BINDIR)
-	rustc --crate-type bin -o $@ $<
+ENTRYPOINT := main.rs
+DEPFILE    := $(INTDIR)/$(ENTRYPOINT:.rs=.d)
+
+-include $(DEPFILE)
+
+$(BINDIR)/eyja: $(SRCDIR)/eyja/$(ENTRYPOINT) | $(BINDIR) $(INTDIR)
+	rustc --crate-type bin --dep-info $(DEPFILE) -o $@ $<
+
+$(INTDIR):
+	@mkdir $(INTDIR)
 
 $(BINDIR):
 	@mkdir $(BINDIR)
