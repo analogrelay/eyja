@@ -1,75 +1,53 @@
 use std;
-use std::ascii;
-use std::char::is_whitespace;
-use std::fmt::Show;
-use std::result::Result;
+use std::ascii::StrAsciiExt;
+use std::vec::Vec;
 use std::io::{IoError, EndOfFile};
-
-enum Command {
-	Exit,
-	Invoke(|args: ~[&str]|)
-}
-
-enum ParseError {
-	UnknownIoError(IoError),
-	NoCommand,
-	InvalidCommand(~str)
-}
 
 pub fn run() {
 	loop {
 		print!("eyja> ");
 
-		// Parse a command
-		match read_command() {
-			Err(err) => on_error(err),
-			Ok(command) => match command {
-				Exit => break,
-				Invoke(f) => f()
-			}
+		// Read the next line
+		let line = match std::io::stdio::stdin().read_line() {
+			Err(err) => match err.kind {
+				EndOfFile => break,
+				_ => io_err(err)
+			},
+			Ok(line) => line
+		};
+
+		let words = line.words().collect::<Vec<&str>>();
+
+		match parse_line(words.as_slice()) {
+			Some((command, maybe_args)) => {
+				// Dispatch the command
+				if command.eq_ignore_ascii_case("exit") {
+					break
+				} else {
+					if !::commands::dispatch(command.to_ascii_lower(), maybe_args) {
+						unknown_command(command);
+					}
+				}
+			},
+			_ => {}
 		}
 	}
-	println!("")
-	println!("Goodbye!")
+	println!("Goodbye!");
 }
 
-fn read_command() -> Result<Command, ParseError> {
-	match std::io::stdin().read_line() {
-		Err(err) => {
-			match err.kind {
-				EndOfFile => Ok(Exit),
-				_ => Err(UnknownIoError(err))
-			}
-		},
-		Ok(line) => parse_command(line)
+fn unknown_command(command: &str) {
+	println!("Unknown command: {}", command);
+}
+
+fn parse_line<'a>(words: &'a[&'a str]) -> Option<(&'a str, Option<&'a [&'a str]>)> {
+	match words {
+		[] => None,
+		[command] => Some((command, None)),
+		[command, ..args] => Some((command, Some(args)))
 	}
 }
 
-fn help() {
-	println!("TODO: Help ;P")
-}
-
-fn parse_command(line : &str) -> Result<Command, ParseError> {
-	// Split!
-	match line.words().collect() {
-		[] => Err(NoCommand),
-		[command] => Ok(build_command(command)),
-		[command, ..args] => Ok(build_command(command))
-	}
-}
-
-fn build_command(command : &str) -> Command {
-	// Normalize the command
-	if !command.is_ascii() {
-		Err(InvalidCommand(command))
-	} else {
-		match command.to_ascii().to_lower() {
-			"exit" => Ok(Exit),
-			"help" => Ok(Invoke(help))
-		}
-	}
-}
-
-fn on_error(err: ParseError) {
-	println!("** Error: {} **", err)
+fn io_err(err: IoError) -> ! {
+	println!("I/O Error! {}", err);
+	fail!();
 }
