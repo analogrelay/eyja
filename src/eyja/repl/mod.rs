@@ -2,8 +2,21 @@ use std;
 use std::ascii::StrAsciiExt;
 use std::vec::Vec;
 use std::io::{IoError, EndOfFile};
+use std::hash::sip::SipHasher;
+use collections::hashmap::HashMap;
+
+use store::create_ram_store;
+use self::context::ReplContext;
+
+mod context;
+
+type MaybeArgs<'a> = Option<&'a[&'a str]>;
 
 pub fn run() {
+	let ctx = ReplContext::new();
+	let cmds = HashMap::<~str, fn (args: MaybeArgs, ctx: &ReplContext)>::new();
+	cmds.insert("help", help);
+
 	loop {
 		print!("eyja> ");
 
@@ -24,8 +37,9 @@ pub fn run() {
 				if command.eq_ignore_ascii_case("exit") {
 					break
 				} else {
-					if !::commands::dispatch(command.to_ascii_lower(), maybe_args) {
-						unknown_command(command);
+					match cmds.find_equiv(command) {
+						Some(f) => f(maybe_args, &ctx),
+						None => unknown_command(command)
 					}
 				}
 			},
@@ -33,6 +47,11 @@ pub fn run() {
 		}
 	}
 	println!("Goodbye!");
+}
+
+fn help(_ : MaybeArgs, ctx: &mut ReplContext) {
+	println!("Active Database: {}", ctx.db());
+	println!("Help TODO ;)");
 }
 
 fn unknown_command(command: &str) {

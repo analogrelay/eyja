@@ -4,7 +4,6 @@ extern crate term;
 extern crate collections;
 
 mod store;
-mod commands;
 mod repl;
 
 fn main() {

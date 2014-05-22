@@ -1,3 +1,5 @@
+use std::fmt;
+use std::fmt::{Show, Formatter};
 use std::hash::sip::SipHasher;
 use collections::hashmap::HashMap;
 
@@ -31,7 +33,7 @@ impl RamStore {
 }
 
 pub struct Database {
-	store: Box<DataStore>
+	store: Box<S>
 }
 
 impl Database {
